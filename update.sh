@@ -731,6 +731,12 @@ update_dns_app_menu_location() {
     fi
 }
 
+modify_build_version() {
+        sed -i 's/LiBwrt/Deepwrt/g' $BUILD_DIR/package/base-files/image-config.in
+        sed -i 's/LiBwrt/Deepwrt/g' $BUILD_DIR/include/version.mk
+        sed -i 's/LiBwrt/Deepwrt/g' $BUILD_DIR/package/base-files/files/bin/config_generate
+}
+
 main() {
     clone_repo
     clean_up
@@ -776,6 +782,7 @@ main() {
     update_script_priority
     # update_proxy_app_menu_location
     # update_dns_app_menu_location
+    modify_build_version
 }
 
 main "$@"
