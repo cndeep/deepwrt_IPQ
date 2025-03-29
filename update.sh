@@ -734,7 +734,7 @@ update_dns_app_menu_location() {
 modify_build_version() {
         sed -i 's/LiBwrt/Deepwrt/g' $BUILD_DIR/package/base-files/image-config.in
         sed -i 's/LiBwrt/Deepwrt/g' $BUILD_DIR/include/version.mk
-        sed -i 's/LiBwrt/Deepwrt/g' $BUILD_DIR/package/base-files/files/bin/config_generate
+        sed -i 's/LibWrt/DeepWrt/g' $BUILD_DIR/package/base-files/files/bin/config_generate
 }
 
 main() {
