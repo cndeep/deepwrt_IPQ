@@ -24,7 +24,7 @@ FEEDS_CONF="feeds.conf.default"
 GOLANG_REPO="https://github.com/sbwml/packages_lang_golang"
 GOLANG_BRANCH="24.x"
 THEME_SET="argon"
-LAN_ADDR="192.168.6.1"
+LAN_ADDR="192.168.1.1"
 
 clone_repo() {
     if [[ ! -d $BUILD_DIR ]]; then
@@ -398,16 +398,10 @@ EOF
     chmod +x "$sh_dir/custom_task"
 }
 
-update_pw_ha_chk() {
-    local new_path="$BASE_PATH/patches/haproxy_check.sh"
+update_pw() {
     local pw_share_dir="$BUILD_DIR/feeds/small8/luci-app-passwall/root/usr/share/passwall"
-    local pw_ha_path="$pw_share_dir/haproxy_check.sh"
-    local ha_lua_path="$pw_share_dir/haproxy.lua"
     local smartdns_lua_path="$pw_share_dir/helper_smartdns_add.lua"
     local rules_dir="$pw_share_dir/rules"
-
-    # 修改 haproxy.lua 文件中的 rise 和 fall 参数
-    [ -f "$ha_lua_path" ] && sed -i 's/rise 1 fall 3/rise 3 fall 2/g' "$ha_lua_path"
 
     # 删除 helper_smartdns_add.lua 文件中的特定行
     [ -f "$smartdns_lua_path" ] && sed -i '/force-qtype-SOA 65/d' "$smartdns_lua_path"
@@ -453,7 +447,7 @@ update_nss_pbuf_performance() {
 set_build_signature() {
     local file="$BUILD_DIR/feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js"
     if [ -d "$(dirname "$file")" ] && [ -f $file ]; then
-        sed -i "s/(\(luciversion || ''\))/(\1) + (' \/ build by DeepBlue')/g" "$file"
+        sed -i "s/(\(luciversion || ''\))/(\1) + (' \/ build by ZqinKing')/g" "$file"
     fi
 }
 
@@ -543,14 +537,6 @@ update_package() {
         sed -i 's/^PKG_HASH:=.*/PKG_HASH:='$PKG_HASH'/g' $mk_path
 
         echo "Update Package $1 to $PKG_VER $PKG_HASH"
-    fi
-}
-
-update_lucky() {
-    local mk_dir="$BUILD_DIR/feeds/small8/lucky/Makefile"
-    if [ -d "${mk_dir%/*}" ] && [ -f "$mk_dir" ]; then
-        sed -i '/Build\/Prepare/ a\	[ -f $(TOPDIR)/../patches/lucky_Linux_$(LUCKY_ARCH).tar.gz ] && install -Dm644 $(TOPDIR)/../patches/lucky_Linux_$(LUCKY_ARCH).tar.gz $(PKG_BUILD_DIR)/$(PKG_NAME)_$(PKG_VERSION)_Linux_$(LUCKY_ARCH).tar.gz' "$mk_dir"
-        sed -i '/wget/d' "$mk_dir"
     fi
 }
 
@@ -731,12 +717,6 @@ update_dns_app_menu_location() {
     fi
 }
 
-modify_build_version() {
-        sed -i 's/LiBwrt/DeepWrt/g' $BUILD_DIR/package/base-files/image-config.in
-        sed -i 's/LiBwrt/DeepWrt/g' $BUILD_DIR/include/version.mk
-        sed -i 's/LibWrt/DeepWrt/g' $BUILD_DIR/package/base-files/files/bin/config_generate
-}
-
 main() {
     clone_repo
     clean_up
@@ -760,7 +740,7 @@ main() {
     update_tcping
     add_ax6600_led
     set_custom_task
-    update_pw_ha_chk
+    update_pw
     install_opkg_distfeeds
     update_nss_pbuf_performance
     set_build_signature
@@ -769,7 +749,6 @@ main() {
     update_menu_location
     fix_compile_coremark
     update_dnsmasq_conf
-    # update_lucky
     add_backup_info_to_sysupgrade
     optimize_smartDNS
     update_mosdns_deconfig
@@ -782,7 +761,6 @@ main() {
     update_script_priority
     # update_proxy_app_menu_location
     # update_dns_app_menu_location
-    modify_build_version
 }
 
 main "$@"
