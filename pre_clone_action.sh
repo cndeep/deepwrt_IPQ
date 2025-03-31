@@ -40,3 +40,20 @@ PROJECT_MIRRORS_FILE="$BUILD_DIR/scripts/projectsmirrors.json"
 if [ -f "$PROJECT_MIRRORS_FILE" ]; then
     sed -i '/.cn\//d; /tencent/d; /aliyun/d' "$PROJECT_MIRRORS_FILE"
 fi
+
+# jdcloud_ipq60xx_libwrt
+if [[ $Dev == "jdcloud_ipq60xx_libwrt" ]]; then
+	sed -i 's/LiBwrt/DeepWrt/g' $BUILD_DIR/package/base-files/image-config.in
+	sed -i 's/LiBwrt/DeepWrt/g' $BUILD_DIR/include/version.mk
+	sed -i 's/LibWrt/DeepWrt/g' $BUILD_DIR/package/base-files/files/bin/config_generate
+fi
+# jdcloud_ipq60xx_deepwrt
+if [[ $Dev == "jdcloud_ipq60xx_deepwrt" ]]; then
+	echo "src-git packages https://github.com/immortalwrt/packages.git" >"$BUILD_DIR/feeds.conf.default"
+	echo "src-git luci https://github.com/immortalwrt/luci.git" >>"$BUILD_DIR/feeds.conf.default"
+	echo "src-git routing https://git.openwrt.org/feed/routing.git" >>"$BUILD_DIR/feeds.conf.default"
+	echo "src-git telephony https://git.openwrt.org/feed/telephony.git" >>"$BUILD_DIR/feeds.conf.default"
+	echo "src-git video https://github.com/openwrt/video.git" >>"$BUILD_DIR/feeds.conf.default"
+	echo "src-git nss_packages https://github.com/qosmio/nss-packages.git;NSS-12.5-K6.x" >>"$BUILD_DIR/feeds.conf.default"
+	echo "src-git sqm_scripts_nss https://github.com/qosmio/sqm-scripts-nss.git" >>"$BUILD_DIR/feeds.conf.default"
+fi
