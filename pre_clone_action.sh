@@ -40,3 +40,10 @@ PROJECT_MIRRORS_FILE="$BUILD_DIR/scripts/projectsmirrors.json"
 if [ -f "$PROJECT_MIRRORS_FILE" ]; then
     sed -i '/.cn\//d; /tencent/d; /aliyun/d' "$PROJECT_MIRRORS_FILE"
 fi
+
+# jdcloud_ipq60xx_deepwrt
+if [[ $Dev == "jdcloud_ipq60xx_deepwrt" ]]; then
+	sed -i 's/LiBwrt/DeepWrt/g' $BUILD_DIR/package/base-files/image-config.in
+	sed -i 's/LiBwrt/DeepWrt/g' $BUILD_DIR/include/version.mk
+	sed -i 's/LibWrt/DeepWrt/g' $BUILD_DIR/package/base-files/files/bin/config_generate
+fi
