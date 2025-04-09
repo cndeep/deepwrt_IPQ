@@ -31,6 +31,12 @@ clone_repo() {
         echo $REPO_URL $REPO_BRANCH
         git clone --depth 1 -b $REPO_BRANCH $REPO_URL $BUILD_DIR
     fi
+    
+    if [[ ${{ inputs.model }} == "jdcloud_ipq60xx_deepwrt" ]]; then
+	sed -i 's/LiBwrt/DeepWrt/g' $BUILD_DIR/package/base-files/image-config.in
+	sed -i 's/LiBwrt/DeepWrt/g' $BUILD_DIR/include/version.mk
+	sed -i 's/LibWrt/DeepWrt/g' $BUILD_DIR/package/base-files/files/bin/config_generate
+    fi
 }
 
 clean_up() {
