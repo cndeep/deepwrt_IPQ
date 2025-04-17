@@ -447,7 +447,7 @@ update_nss_pbuf_performance() {
 set_build_signature() {
     local file="$BUILD_DIR/feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js"
     if [ -d "$(dirname "$file")" ] && [ -f $file ]; then
-        sed -i "s/(\(luciversion || ''\))/(\1) + (' \/ build by ZqinKing')/g" "$file"
+        sed -i "s/(\(luciversion || ''\))/(\1) + (' \/ build by DeepWrt')/g" "$file"
     fi
 }
 
@@ -744,6 +744,12 @@ update_geoip() {
     fi
 }
 
+modify_build_version() {
+    sed -i 's/LiBwrt/DeepWrt/g' $BUILD_DIR/package/base-files/image-config.in
+    sed -i 's/LiBwrt/DeepWrt/g' $BUILD_DIR/include/version.mk
+    sed -i 's/LibWrt/DeepWrt/g' $BUILD_DIR/package/base-files/files/bin/config_generate
+}
+
 main() {
     clone_repo
     clean_up
@@ -790,6 +796,7 @@ main() {
     update_geoip
     # update_proxy_app_menu_location
     # update_dns_app_menu_location
+    modify_build_version
 }
 
 main "$@"
